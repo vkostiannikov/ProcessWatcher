@@ -11,6 +11,7 @@
 #include "constants.h"
 #include <filesystem>
 #include "Timer.h"
+#include "ProcessWatcher.h"
 
 ProcessManager::ProcessManager(std::shared_ptr<Display> display) : display_(display), stop_(false)
 {
@@ -34,6 +35,7 @@ void ProcessManager::start()
 void ProcessManager::stop()
 {
     stop_.store(true);
+    ProcessWatcherInstance.stop();
 }
 
 void ProcessManager::workerThread()

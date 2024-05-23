@@ -6,18 +6,12 @@
 
 ProcessWatcher::ProcessWatcher()
 {
-    stop_.store(false);
-    thread_.emplace_back(std::thread(&ProcessWatcher::work_thread, this));
+   start();
 }
 
 ProcessWatcher::~ProcessWatcher()
 {
-    stop_.store(true);
-    cv_.notify_all();
-    std::for_each(thread_.begin(), thread_.end(), [](std::thread& t) {
-        if(t.joinable())
-            t.join();
-    });
+    stop();
 }
 
 void ProcessWatcher::subscribe(ISubscriber* process)
@@ -72,4 +66,20 @@ void ProcessWatcher::setSort(std::function<void()> sort)
 {
     std::unique_lock<std::mutex> lock(mtx_);
     sort_ = sort;
+}
+
+void ProcessWatcher::start()
+{
+    stop_.store(false);
+    thread_.emplace_back(std::thread(&ProcessWatcher::work_thread, this));
+}
+
+void ProcessWatcher::stop()
+{
+    stop_.store(true);
+    cv_.notify_all();
+    std::for_each(thread_.begin(), thread_.end(), [](std::thread& t) {
+        if(t.joinable())
+            t.join();
+    });
 }

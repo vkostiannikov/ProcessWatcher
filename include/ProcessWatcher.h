@@ -54,6 +54,9 @@ public:
 
     void setSort(std::function<void()> sort);
 
+    void start();
+    void stop();
+
 private:
     /**
      * @brief The work thread that updates.
