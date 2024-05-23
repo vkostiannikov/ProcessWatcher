@@ -25,5 +25,8 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
 $(BUILD_DIR):
 	mkdir -p $@
 
+install:
+	cp $(TARGET) /usr/local/bin
+
 clean:
 	rm -rf $(BUILD_DIR) $(TARGET)
